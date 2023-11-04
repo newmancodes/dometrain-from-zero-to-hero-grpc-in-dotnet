@@ -1,5 +1,6 @@
 ﻿using Basics;
 using Grpc.Core;
+using Grpc.Health.V1;
 using Grpc.Net.Client;
 
 var options = new GrpcChannelOptions
@@ -11,6 +12,11 @@ await Task.Delay(2000);
 
 using var cancellationTokenSource = new CancellationTokenSource();
 using var channel = GrpcChannel.ForAddress("http://localhost:5009", options);
+
+var healthClient = new Health.HealthClient(channel);
+var healthResult = await healthClient.CheckAsync(new HealthCheckRequest());
+Console.WriteLine(healthResult.Status);
+
 var client = new FirstServiceDefinition.FirstServiceDefinitionClient(channel);
 
 await Unary(client, cancellationTokenSource.Token);

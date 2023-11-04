@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using FirstGrpc.Interceptors;
 using FirstGrpc.Services;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 public class Program
 {
@@ -20,12 +21,16 @@ public class Program
             options.ResponseCompressionLevel = CompressionLevel.SmallestSize;
             options.Interceptors.Add<ServerLoggingInterceptor>();
         });
+        builder.Services.AddGrpcHealthChecks(options =>
+        {
+        }).AddCheck("my cool service", () => HealthCheckResult.Healthy(), new[] { "grpc", "live" });
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         app.MapGrpcService<FirstService>();
         app.MapGrpcService<GreeterService>();
+        app.MapGrpcHealthChecksService();
         app.MapGet("/",
             () =>
                 "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
