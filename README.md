@@ -224,3 +224,21 @@ message AddressBook {
 - Server Streaming
 - Bi-directional Streaming
 
+## Advanced Features
+
+### Interceptors
+
+Available on both client and server.
+
+### Compression
+
+Enable compression and then use client metadata entry grpc-accept-encoding set to the appropriate algorithm e.g. gzip
+
+### Transient Fault Handling
+
+Can leverage retry policies which are transparent to the client or hedging (where multiple requests are made and the first to complete is returned, with the others being cancelled).  
+Can only pick one of these strategies, we have to choose the right tool for the job.
+
+## Testing
+
+

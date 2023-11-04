@@ -3,15 +3,8 @@ using Grpc.Core;
 
 namespace FirstGrpc.Services;
 
-public class FirstService : FirstServiceDefinition.FirstServiceDefinitionBase
+public class FirstService : FirstServiceDefinition.FirstServiceDefinitionBase, IFirstService
 {
-    private readonly ILogger<FirstService> _logger;
-
-    public FirstService(ILogger<FirstService> logger)
-    {
-        _logger = logger;
-    }
-
     public override Task<Response> Unary(Request request, ServerCallContext context)
     {
         var response = new Response
