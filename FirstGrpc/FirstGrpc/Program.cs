@@ -1,4 +1,7 @@
+using System.IO.Compression;
+using FirstGrpc.Interceptors;
 using FirstGrpc.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 // Add services to the container.
-builder.Services.AddGrpc();
+builder.Services.AddTransient<ServerLoggingInterceptor>();
+builder.Services.AddGrpc(options =>
+{
+    options.ResponseCompressionAlgorithm = "gzip";
+    options.ResponseCompressionLevel = CompressionLevel.SmallestSize;
+    options.Interceptors.Add<ServerLoggingInterceptor>();
+});
 
 var app = builder.Build();
 

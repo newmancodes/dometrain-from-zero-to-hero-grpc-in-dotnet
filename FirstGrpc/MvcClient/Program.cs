@@ -1,13 +1,16 @@
 using Basics;
+using MvcClient.Interceptors;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<ClientLoggerInterceptor>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddGrpcClient<FirstServiceDefinition.FirstServiceDefinitionClient>(options =>
 {
     options.Address = new Uri("http://localhost:5009");
-});
+
+}).AddInterceptor<ClientLoggerInterceptor>();
 
 var app = builder.Build();
 

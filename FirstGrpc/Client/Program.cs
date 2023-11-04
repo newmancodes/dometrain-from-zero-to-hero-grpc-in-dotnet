@@ -24,12 +24,16 @@ return;
 
 async Task Unary(FirstServiceDefinition.FirstServiceDefinitionClient client, CancellationToken cancellationToken)
 {
+    var metadata = new Metadata()
+    {
+        { "grpc-accept-encoding", "gzip" }
+    };
     var request = new Request
     {
         Content = "Hello"
     };
 
-    var response = await client.UnaryAsync(request, /*deadline: DateTime.UtcNow.AddMilliseconds(1), */cancellationToken: cancellationToken);
+    var response = await client.UnaryAsync(request, headers: metadata, /*deadline: DateTime.UtcNow.AddMilliseconds(1), */cancellationToken: cancellationToken);
 
     Console.WriteLine(response.Message);
 }
