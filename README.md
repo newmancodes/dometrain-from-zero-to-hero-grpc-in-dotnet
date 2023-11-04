@@ -216,3 +216,11 @@ message AddressBook {
     repeated Person people = 1;
 }
 ```
+
+### Method Types
+
+- Unary (Request/Response)
+- Client Streaming
+- Server Streaming
+- Bi-directional Streaming
+
