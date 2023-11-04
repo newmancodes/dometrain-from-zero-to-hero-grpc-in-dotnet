@@ -258,3 +258,19 @@ Security can be applied at the:
 - Channel-level
 
 Can also use both together.
+
+### Reflection
+
+Server reflection allows services to be discovered at runtime.
+
+### Transcoding
+
+Not fully developed.  
+Allows for a gRPC service to be exposed as a REST API.
+Good to keep an eye on but not ready for production.
+
+### gRPC Web
+
+Not fully developed.
+Only Unary and Server Stream requests are supported.
+Framework that allows gRPC to be used in the browser.
