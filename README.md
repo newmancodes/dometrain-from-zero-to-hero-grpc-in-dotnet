@@ -236,9 +236,25 @@ Enable compression and then use client metadata entry grpc-accept-encoding set t
 
 ### Transient Fault Handling
 
-Can leverage retry policies which are transparent to the client or hedging (where multiple requests are made and the first to complete is returned, with the others being cancelled).  
+Can leverage retry policies which are transparent to the client or [hedging](https://grpc.io/docs/guides/request-hedging/).  
 Can only pick one of these strategies, we have to choose the right tool for the job.
 
-## Testing
+## Security
 
+- WS-Federation
+- JWT
+- AAD / Entra Id
+- Identity Server
+- OAuth 2.0
+- OpenID Connect
+- Channel authentication
+- Client certificate
 
+Does not support Windows Authentication
+
+Security can be applied at the:
+
+- Call-level
+- Channel-level
+
+Can also use both together.
