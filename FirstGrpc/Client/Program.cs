@@ -29,7 +29,7 @@ async Task Unary(FirstServiceDefinition.FirstServiceDefinitionClient client, Can
         Content = "Hello"
     };
 
-    var response = await client.UnaryAsync(request, deadline: DateTime.UtcNow.AddMilliseconds(1), cancellationToken: cancellationToken);
+    var response = await client.UnaryAsync(request, /*deadline: DateTime.UtcNow.AddMilliseconds(1), */cancellationToken: cancellationToken);
 
     Console.WriteLine(response.Message);
 }
@@ -53,10 +53,32 @@ async Task ServerStreaming(
     FirstServiceDefinition.FirstServiceDefinitionClient client,
     CancellationToken cancellationToken)
 {
-    using var call = client.ServerStream(new Request { Content = "Hello!" }, cancellationToken: cancellationToken);
-    await foreach (var response in call.ResponseStream.ReadAllAsync(cancellationToken))
+    try
     {
-        Console.WriteLine(response.Message);
+        var metadata = new Metadata
+        {
+            { "my-first-key", "my-first-value" },
+            { "my-second-key", "my-second-value" }
+        };
+
+        using var call = client.ServerStream(
+            new Request { Content = "Hello!" },
+            headers: metadata,
+            cancellationToken: cancellationToken);
+
+        await foreach (var response in call.ResponseStream.ReadAllAsync(cancellationToken))
+        {
+            Console.WriteLine(response.Message);
+        }
+
+        var trailers = call.GetTrailers();
+        foreach (var trailer in trailers)
+        {
+            Console.WriteLine($"{trailer.Key} {trailer.Value}");
+        }
+    }
+    catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+    {
     }
 }
 

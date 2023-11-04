@@ -44,11 +44,19 @@ public class FirstService : FirstServiceDefinition.FirstServiceDefinitionBase
 
     public override async Task ServerStream(Request request, IServerStreamWriter<Response> responseStream, ServerCallContext context)
     {
+        var myTrailer = new Metadata.Entry("my-trailer", "my-trailer-value");
+        context.ResponseTrailers.Add(myTrailer);
+
         for (var i = 0; i < 100; i++)
         {
             if (context.CancellationToken.IsCancellationRequested)
             {
                 break;
+            }
+
+            foreach (var entry in context.RequestHeaders)
+            {
+                Console.WriteLine(entry.Key + " " + entry.Value);
             }
 
             var response = new Response
